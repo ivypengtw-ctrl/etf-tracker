@@ -1,9 +1,18 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import etfs, dashboard, managers, stocks, alerts
+from app.scheduler import start_scheduler
 
-app = FastAPI(title="ETF Tracker API", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(app):
+    start_scheduler()
+    yield
+
+
+app = FastAPI(title="ETF Tracker API", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
