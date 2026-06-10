@@ -1,12 +1,28 @@
 import { getETF, getETFChanges } from "@/lib/api";
 import HoldingsList from "@/components/etf/HoldingsList";
 import Link from "next/link";
+import type { ETF, ETFChanges } from "@/lib/types";
 
 export default async function ETFDetailPage({ params }: { params: { code: string } }) {
-  const [etf, changesData] = await Promise.all([
-    getETF(params.code),
-    getETFChanges(params.code),
-  ]);
+  let etf: ETF | null = null;
+  let changesData: ETFChanges | null = null;
+
+  try {
+    [etf, changesData] = await Promise.all([
+      getETF(params.code),
+      getETFChanges(params.code),
+    ]);
+  } catch {
+    // Backend not available
+  }
+
+  if (!etf) {
+    return (
+      <div className="max-w-5xl mx-auto px-6 py-6">
+        <p className="text-slate-400">找不到 ETF：{params.code}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-6">
@@ -31,7 +47,7 @@ export default async function ETFDetailPage({ params }: { params: { code: string
         <div className="px-4 py-3 border-b border-slate-800">
           <p className="font-semibold text-sm">今日成分股異動</p>
         </div>
-        <HoldingsList changes={changesData.changes} />
+        <HoldingsList changes={changesData?.changes ?? []} />
       </div>
     </div>
   );

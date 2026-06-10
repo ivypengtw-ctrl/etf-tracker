@@ -1,7 +1,22 @@
 import { getManager } from "@/lib/api";
+import type { FundManager } from "@/lib/types";
 
 export default async function ManagerPage({ params }: { params: { id: string } }) {
-  const manager = await getManager(params.id);
+  let manager: FundManager | null = null;
+
+  try {
+    manager = await getManager(params.id);
+  } catch {
+    // Backend not available
+  }
+
+  if (!manager) {
+    return (
+      <div className="max-w-3xl mx-auto px-6 py-6">
+        <p className="text-slate-400">找不到經理人：{params.id}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-6">

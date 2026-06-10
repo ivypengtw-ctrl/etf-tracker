@@ -6,7 +6,7 @@ import type { ETF } from "@/lib/types";
 type Filter = "all" | "buy" | "sell" | "stock" | "bond";
 
 export default function ETFTable({ etfs }: { etfs: ETF[] }) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(""); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [filter, setFilter] = useState<Filter>("all");
 
   const displayed = etfs.filter((e) => {

@@ -1,8 +1,23 @@
 import { getStock } from "@/lib/api";
 import Link from "next/link";
+import type { Stock } from "@/lib/types";
 
 export default async function StockPage({ params }: { params: { ticker: string } }) {
-  const stock = await getStock(params.ticker);
+  let stock: Stock | null = null;
+
+  try {
+    stock = await getStock(params.ticker);
+  } catch {
+    // Backend not available
+  }
+
+  if (!stock) {
+    return (
+      <div className="max-w-3xl mx-auto px-6 py-6">
+        <p className="text-slate-400">找不到個股：{params.ticker}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-6">
