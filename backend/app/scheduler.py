@@ -12,10 +12,12 @@ scheduler = AsyncIOScheduler()
 
 
 async def _run_daily_etf_update():
-    """Called by scheduler at 18:30 daily. Scrapers (Plan 2) plug in here."""
-    logger.info("Daily ETF update triggered (scrapers not yet implemented)")
+    """Called by scheduler at 18:30 daily."""
+    logger.info("Daily ETF update triggered")
     async with AsyncSessionLocal() as db:
         async with db.begin():
+            from app.scrapers.coordinator import run_all_scrapers
+            await run_all_scrapers(db, date.today())
             await check_and_notify(db, date.today())
 
 
