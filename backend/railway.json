@@ -5,9 +5,9 @@
   },
   "deploy": {
     "startCommand": "uvicorn app.main:app --host 0.0.0.0 --port $PORT",
-    "healthcheckPath": "/docs",
-    "healthcheckInterval": 10,
-    "healthcheckTimeout": 5,
-    "healthcheckMaxRetries": 3
+    "healthcheckPath": "/",
+    "healthcheckInterval": 15,
+    "healthcheckTimeout": 10,
+    "healthcheckMaxRetries": 5
   }
 }
