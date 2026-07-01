@@ -9,5 +9,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy app
 COPY . .
 
-# Run migrations and start server
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Start server
+CMD sh -c 'uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}'
