@@ -39,7 +39,7 @@ async def compute_daily_diff(
 
         delta = t - y
         price = price_map.get(ticker) if price_map else None
-        amount = (Decimal(delta) / 1000 * price / Decimal("1e8")).quantize(Decimal("0.01")) if price else None
+        amount = (Decimal(delta) * price / Decimal("1e8")).quantize(Decimal("0.01")) if price else None
 
         changes.append(HoldingsChange(
             etf_id=etf_id,

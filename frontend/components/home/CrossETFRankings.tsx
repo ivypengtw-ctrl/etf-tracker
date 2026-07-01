@@ -25,7 +25,7 @@ function RankCard({
             <p className="text-[10px] text-slate-500 truncate">{item.name ?? item.etf_name}</p>
           </div>
           <span className={`text-xs font-bold ${color}`}>
-            {positive ? "+" : ""}{item.total_amount_billion?.toFixed(1)} 億
+            {positive ? "+" : ""}{item.total_amount_billion != null ? Number(item.total_amount_billion).toFixed(1) : "—"} 億
           </span>
         </div>
       ))}

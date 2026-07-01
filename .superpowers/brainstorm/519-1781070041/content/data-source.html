@@ -1,0 +1,30 @@
+<h2>台灣 ETF 追蹤網站</h2>
+<p class="subtitle">首先，釐清資料從哪裡來</p>
+
+<div class="section">
+  <p>台灣 ETF 成分股每日異動資料，主要有以下幾個來源：</p>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>證交所 / 投信公司官網爬蟲</h3>
+      <p>自行爬取各 ETF 公司每日公告的成分股清單（例如元大、富邦、國泰投信網站）。資料最完整，但需要維護爬蟲，每家格式不同。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>第三方 API（如 Fugle、FinMind）</h3>
+      <p>使用 FinMind 或 Fugle 等台股 API 服務，已整理好結構化資料。較快速開發，但依賴外部服務，部分資料需付費。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>先從單一 ETF 開始（例如 00981A）</h3>
+      <p>只爬一家投信的資料作為 MVP，驗證架構後再逐步擴展到全部 ETF。風險最低，但初期覆蓋範圍有限。</p>
+    </div>
+  </div>
+</div>

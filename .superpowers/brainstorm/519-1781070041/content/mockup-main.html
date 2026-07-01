@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETF 異動追蹤 — 版面預覽</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0b0f1a; color: #e2e8f0; font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 13px; padding: 16px; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #1e293b; }
+  .logo { font-size: 16px; font-weight: 700; color: #f8fafc; }
+  .logo span { color: #38bdf8; }
+  .search { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 6px 12px; color: #94a3b8; font-size: 12px; width: 220px; }
+  .badge { background: #1e293b; color: #64748b; font-size: 11px; padding: 4px 10px; border-radius: 99px; }
+
+  .section-label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+
+  /* Top movers cards */
+  .cards-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
+  .mover-card { background: #111827; border: 1px solid #1e293b; border-radius: 10px; padding: 12px; }
+  .mover-card .etf-code { font-size: 11px; color: #64748b; margin-bottom: 2px; }
+  .mover-card .etf-name { font-size: 12px; font-weight: 600; color: #f1f5f9; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mover-card .manager { font-size: 10px; color: #475569; margin-bottom: 8px; }
+  .mover-card .change { font-size: 18px; font-weight: 700; }
+  .mover-card .change-detail { font-size: 10px; color: #64748b; margin-top: 2px; }
+  .up { color: #4ade80; }
+  .down { color: #f87171; }
+  .card-up { border-top: 2px solid #4ade80; }
+  .card-down { border-top: 2px solid #f87171; }
+
+  /* Table */
+  .table-wrap { background: #111827; border: 1px solid #1e293b; border-radius: 10px; overflow: hidden; }
+  .table-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #1e293b; }
+  .table-title { font-size: 13px; font-weight: 600; color: #f1f5f9; }
+  .filter-row { display: flex; gap: 6px; }
+  .filter-btn { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 4px 10px; color: #94a3b8; font-size: 11px; cursor: pointer; }
+  .filter-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th { padding: 8px 16px; text-align: left; font-size: 11px; font-weight: 500; color: #475569; border-bottom: 1px solid #1e293b; }
+  tbody tr { border-bottom: 1px solid #0f172a; transition: background 0.1s; }
+  tbody tr:hover { background: #1e293b55; }
+  tbody td { padding: 10px 16px; }
+  .etf-cell { display: flex; flex-direction: column; }
+  .etf-cell .code { font-size: 11px; color: #64748b; }
+  .etf-cell .name { font-size: 12px; font-weight: 500; color: #e2e8f0; }
+  .manager-name { color: #94a3b8; font-size: 12px; }
+  .added { color: #4ade80; font-weight: 600; }
+  .removed { color: #f87171; font-weight: 600; }
+  .neutral { color: #475569; }
+  .shares { color: #94a3b8; font-size: 11px; }
+  .detail-btn { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 3px 8px; color: #64748b; font-size: 10px; cursor: pointer; }
+
+  .status-bar { display: flex; gap: 16px; padding: 8px 16px; background: #0f172a; border-top: 1px solid #1e293b; }
+  .status-item { font-size: 10px; color: #475569; }
+  .status-item span { color: #94a3b8; }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="logo">ETF<span>異動</span>追蹤</div>
+  <input class="search" placeholder="🔍  搜尋 ETF 代碼或名稱...">
+  <div class="badge">更新時間：2026/06/10 17:30</div>
+</div>
+
+<!-- Today's Top Movers -->
+<div class="section-label">今日異動最大</div>
+<div class="cards-row">
+  <div class="mover-card card-up">
+    <div class="etf-code">00878</div>
+    <div class="etf-name">國泰永續高股息</div>
+    <div class="manager">經理人：蘇鈺媛</div>
+    <div class="change up">+5 檔</div>
+    <div class="change-detail up">加倉 12,400 張</div>
+  </div>
+  <div class="mover-card card-up">
+    <div class="etf-code">00713</div>
+    <div class="etf-name">元大台灣高息低波</div>
+    <div class="manager">經理人：陳重銓</div>
+    <div class="change up">+3 檔</div>
+    <div class="change-detail up">加倉 8,200 張</div>
+  </div>
+  <div class="mover-card card-down">
+    <div class="etf-code">00981A</div>
+    <div class="etf-name">中信ESG永續關鍵半導體</div>
+    <div class="manager">經理人：林彥名</div>
+    <div class="change down">-4 檔</div>
+    <div class="change-detail down">減倉 6,800 張</div>
+  </div>
+  <div class="mover-card card-down">
+    <div class="etf-code">00692</div>
+    <div class="etf-name">富邦公司治理</div>
+    <div class="manager">經理人：劉鴻杰</div>
+    <div class="change down">-2 檔</div>
+    <div class="change-detail down">減倉 3,100 張</div>
+  </div>
+</div>
+
+<!-- Full Table -->
+<div class="table-wrap">
+  <div class="table-header">
+    <div class="table-title">所有 ETF 今日異動</div>
+    <div class="filter-row">
+      <button class="filter-btn active">全部</button>
+      <button class="filter-btn">只看加倉</button>
+      <button class="filter-btn">只看減倉</button>
+      <button class="filter-btn">股票型</button>
+      <button class="filter-btn">債券型</button>
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ETF</th>
+        <th>基金經理人</th>
+        <th>新增成分股</th>
+        <th>刪除成分股</th>
+        <th>總加倉張數</th>
+        <th>總減倉張數</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="etf-cell"><span class="code">00878</span><span class="name">國泰永續高股息</span></div></td>
+        <td><span class="manager-name">蘇鈺媛</span></td>
+        <td><span class="added">+5 檔</span></td>
+        <td><span class="neutral">—</span></td>
+        <td><span class="shares">12,400 張</span></td>
+        <td><span class="neutral">—</span></td>
+        <td><button class="detail-btn">明細 →</button></td>
+      </tr>
+      <tr>
+        <td><div class="etf-cell"><span class="code">00713</span><span class="name">元大台灣高息低波</span></div></td>
+        <td><span class="manager-name">陳重銓</span></td>
+        <td><span class="added">+3 檔</span></td>
+        <td><span class="removed">-1 檔</span></td>
+        <td><span class="shares">8,200 張</span></td>
+        <td><span class="shares">1,500 張</span></td>
+        <td><button class="detail-btn">明細 →</button></td>
+      </tr>
+      <tr>
+        <td><div class="etf-cell"><span class="code">00981A</span><span class="name">中信ESG永續關鍵半導體</span></div></td>
+        <td><span class="manager-name">林彥名</span></td>
+        <td><span class="neutral">—</span></td>
+        <td><span class="removed">-4 檔</span></td>
+        <td><span class="neutral">—</span></td>
+        <td><span class="shares">6,800 張</span></td>
+        <td><button class="detail-btn">明細 →</button></td>
+      </tr>
+      <tr>
+        <td><div class="etf-cell"><span class="code">00692</span><span class="name">富邦公司治理</span></div></td>
+        <td><span class="manager-name">劉鴻杰</span></td>
+        <td><span class="neutral">—</span></td>
+        <td><span class="removed">-2 檔</span></td>
+        <td><span class="neutral">—</span></td>
+        <td><span class="shares">3,100 張</span></td>
+        <td><button class="detail-btn">明細 →</button></td>
+      </tr>
+      <tr>
+        <td><div class="etf-cell"><span class="code">00919</span><span class="name">群益台灣精選高息</span></div></td>
+        <td><span class="manager-name">葉菀菀</span></td>
+        <td><span class="added">+2 檔</span></td>
+        <td><span class="removed">-2 檔</span></td>
+        <td><span class="shares">4,600 張</span></td>
+        <td><span class="shares">4,200 張</span></td>
+        <td><button class="detail-btn">明細 →</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="status-bar">
+    <div class="status-item">共 <span>87</span> 支 ETF</div>
+    <div class="status-item">今日有異動 <span>23</span> 支</div>
+    <div class="status-item">資料來源：各投信公司官網</div>
+  </div>
+</div>
+
+</body>
+</html>

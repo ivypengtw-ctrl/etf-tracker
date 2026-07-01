@@ -6,15 +6,15 @@ export default function UpdateBar({ summary }: { summary: DashboardSummary }) {
     : 0;
 
   return (
-    <div className="flex items-center gap-3 px-6 py-2 bg-slate-900 border-b border-slate-800 text-xs text-slate-500">
+    <div className="flex items-center gap-3 px-6 py-2 bg-amber-50 border-b border-amber-100 text-xs text-gray-400">
       <span>資料更新</span>
-      <div className="w-24 h-1 rounded-full bg-slate-800">
-        <div className="h-1 rounded-full bg-sky-400" style={{ width: `${pct}%` }} />
+      <div className="w-24 h-1 rounded-full bg-amber-100">
+        <div className="h-1 rounded-full bg-amber-400" style={{ width: `${pct}%` }} />
       </div>
-      <span className="font-semibold text-sky-400">
+      <span className="font-semibold text-amber-500">
         {summary.updated_count} / {summary.total_etf_count} 已更新
       </span>
-      <span className="border-l border-slate-700 pl-3 flex-1">{summary.summary_text}</span>
+      <span className="border-l border-amber-200 pl-3 flex-1 text-gray-500">{summary.summary_text}</span>
     </div>
   );
 }

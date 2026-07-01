@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -File \"C:\\Users\\ivype\\OneDrive\\桌面\\0430\\start_dev.ps1\"",
+            "shell": "powershell",
+            "statusMessage": "啟動開發伺服器...",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

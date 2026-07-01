@@ -4,7 +4,7 @@ from decimal import Decimal
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import HoldingsChange, ETF
+from app.models import HoldingsChange, ETF, Stock
 
 
 async def get_summary_stats(db: AsyncSession, target_date: date) -> dict:
@@ -48,18 +48,20 @@ async def get_cross_etf_rankings(
     result = await db.execute(
         select(
             HoldingsChange.stock_ticker,
+            Stock.name.label("stock_name"),
             func.count(HoldingsChange.etf_id.distinct()).label("etf_count"),
             func.sum(HoldingsChange.amount_billion).label("total_amount"),
         )
+        .outerjoin(Stock, Stock.ticker == HoldingsChange.stock_ticker)
         .where(HoldingsChange.change_date == target_date, condition)
-        .group_by(HoldingsChange.stock_ticker)
+        .group_by(HoldingsChange.stock_ticker, Stock.name)
         .order_by(func.sum(HoldingsChange.amount_billion).desc() if direction == "buy"
                   else func.sum(HoldingsChange.amount_billion).asc())
         .limit(top_n)
     )
 
     return [
-        {"ticker": r.stock_ticker, "etf_count": r.etf_count, "total_amount_billion": r.total_amount}
+        {"ticker": r.stock_ticker, "name": r.stock_name, "etf_count": r.etf_count, "total_amount_billion": r.total_amount}
         for r in result.all()
     ]
 

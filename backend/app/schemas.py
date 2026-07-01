@@ -15,6 +15,14 @@ class FundManagerOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ETFDailySummary(BaseModel):
+    added_count: int = 0
+    removed_count: int = 0
+    buy_billion: Optional[Decimal] = None
+    sell_billion: Optional[Decimal] = None
+    last_change_date: Optional[date] = None
+
+
 class ETFOut(BaseModel):
     id: UUID
     code: str
@@ -22,12 +30,17 @@ class ETFOut(BaseModel):
     type: str
     fund_company: str
     inception_date: Optional[date] = None
+    nav_change_pct: Optional[Decimal] = None
+    all_time_high: Optional[Decimal] = None
+    market_cap_billion: Optional[Decimal] = None
     manager: Optional[FundManagerOut] = None
+    today_summary: Optional[ETFDailySummary] = None
     model_config = {"from_attributes": True}
 
 
 class HoldingsChangeOut(BaseModel):
     stock_ticker: str
+    stock_name: Optional[str] = None
     change_type: str
     shares_before: int
     shares_after: int
@@ -38,7 +51,7 @@ class HoldingsChangeOut(BaseModel):
 
 class ETFChangesOut(BaseModel):
     etf: ETFOut
-    change_date: date
+    change_date: Optional[date] = None
     changes: list[HoldingsChangeOut]
 
 
@@ -79,6 +92,20 @@ class StockOut(BaseModel):
     main_business: Optional[str] = None
     held_by: list[dict] = []
     model_config = {"from_attributes": True}
+
+
+class HoldingSnapshotOut(BaseModel):
+    stock_ticker: str
+    stock_name: Optional[str] = None
+    industry: Optional[str] = None
+    shares: int
+    weight_pct: Decimal
+
+
+class ETFHoldingsOut(BaseModel):
+    snapshot_date: Optional[date] = None
+    count: int = 0
+    holdings: list[HoldingSnapshotOut]
 
 
 class AlertCreate(BaseModel):

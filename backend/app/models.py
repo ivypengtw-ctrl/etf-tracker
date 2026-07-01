@@ -16,6 +16,7 @@ from app.database import Base
 class ETFType(PyEnum):
     stock = "stock"
     bond = "bond"
+    active = "active"
     other = "other"
 
 
@@ -58,6 +59,9 @@ class ETF(Base):
         UUID(as_uuid=True), ForeignKey("fund_managers.id")
     )
     inception_date: Mapped[date | None] = mapped_column(Date)
+    nav_change_pct: Mapped[Decimal | None] = mapped_column(Numeric(6, 2))
+    all_time_high: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
+    market_cap_billion: Mapped[Decimal | None] = mapped_column(Numeric(12, 1))
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

@@ -8,7 +8,7 @@ export default function HoldingsList({ changes }: { changes: HoldingsChange[] })
     <table className="w-full text-xs">
       <thead>
         <tr className="bg-slate-950 text-slate-500 border-b border-slate-800">
-          {["個股", "異動類型", "前日張數", "今日張數", "差值", "金額 (億)"].map((h) => (
+          {["個股", "公司名稱", "異動類型", "前日張數", "今日張數", "差值", "金額 (億)"].map((h) => (
             <th key={h} className="px-4 py-2 text-left font-medium">{h}</th>
           ))}
         </tr>
@@ -26,6 +26,7 @@ export default function HoldingsList({ changes }: { changes: HoldingsChange[] })
                   {c.stock_ticker}
                 </Link>
               </td>
+              <td className="px-4 py-2 text-slate-300">{c.stock_name ?? "—"}</td>
               <td className={`px-4 py-2 font-medium ${isPositive ? "text-green-400" : "text-red-400"}`}>
                 {typeLabel[c.change_type]}
               </td>
@@ -36,7 +37,7 @@ export default function HoldingsList({ changes }: { changes: HoldingsChange[] })
               </td>
               <td className={`px-4 py-2 ${isPositive ? "text-green-400" : "text-red-400"}`}>
                 {c.amount_billion != null
-                  ? `${isPositive ? "+" : ""}${c.amount_billion.toFixed(2)}`
+                  ? `${isPositive ? "+" : ""}${Number(c.amount_billion).toFixed(2)}`
                   : "—"}
               </td>
             </tr>

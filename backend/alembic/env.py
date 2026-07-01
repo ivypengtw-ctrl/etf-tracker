@@ -1,6 +1,10 @@
 import asyncio
 import os
 from logging.config import fileConfig
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine

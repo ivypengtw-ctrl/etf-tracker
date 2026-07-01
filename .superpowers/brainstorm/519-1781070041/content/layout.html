@@ -1,0 +1,81 @@
+<h2>首頁版面風格</h2>
+<p class="subtitle">三種主要排版方向，選一個感覺對的</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0f172a;padding:12px;border-radius:6px;font-family:monospace;font-size:11px;color:#94a3b8">
+        <div style="color:#38bdf8;margin-bottom:6px;font-size:12px">📊 台灣 ETF 異動追蹤</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <span style="background:#1e293b;padding:2px 8px;border-radius:4px;color:#e2e8f0">搜尋 ETF...</span>
+          <span style="background:#1e293b;padding:2px 8px;border-radius:4px;color:#94a3b8">今日 ▾</span>
+        </div>
+        <div style="background:#1e293b;padding:6px 8px;border-radius:4px;margin-bottom:4px;display:flex;justify-content:space-between">
+          <span style="color:#f8fafc">00878 國泰永續高股息</span>
+          <span style="color:#4ade80">+3 檔 ↑</span>
+        </div>
+        <div style="background:#1e293b;padding:6px 8px;border-radius:4px;margin-bottom:4px;display:flex;justify-content:space-between">
+          <span style="color:#f8fafc">00981A 中信ESG</span>
+          <span style="color:#f87171">-2 檔 ↓</span>
+        </div>
+        <div style="background:#1e293b;padding:6px 8px;border-radius:4px;display:flex;justify-content:space-between">
+          <span style="color:#f8fafc">00713 元大台灣高息低波</span>
+          <span style="color:#4ade80">+1 檔 ↑</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — 深色儀表板</h3>
+      <p>黑底金融風，像專業的股票看板。適合盯盤使用。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:12px;border-radius:6px;font-size:11px;color:#334155;border:1px solid #e2e8f0">
+        <div style="color:#0f172a;margin-bottom:6px;font-size:13px;font-weight:600">台灣 ETF 異動追蹤</div>
+        <div style="background:#eff6ff;border-left:3px solid #3b82f6;padding:6px 8px;border-radius:2px;margin-bottom:8px;color:#1d4ed8;font-size:10px">
+          今日共 12 支 ETF 有成分股異動
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:10px">
+          <tr style="color:#64748b"><td>ETF</td><td>經理人</td><td>加倉</td><td>減倉</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:3px 0">00878</td><td>蘇鈺媛</td><td style="color:#16a34a">+3</td><td>-</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:3px 0">00981A</td><td>林彥名</td><td>-</td><td style="color:#dc2626">-2</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — 白底表格風</h3>
+      <p>乾淨清晰，資訊密度高。適合快速掃描多支 ETF。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#fff;padding:12px;border-radius:6px;font-size:11px;color:#374151">
+        <div style="color:#111827;font-size:13px;font-weight:600;margin-bottom:8px">今日異動最大</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+          <div style="border:1px solid #e5e7eb;border-radius:8px;padding:8px">
+            <div style="font-size:10px;color:#6b7280">00878</div>
+            <div style="font-size:12px;font-weight:600;color:#111827">國泰永續高股息</div>
+            <div style="color:#16a34a;font-size:11px;margin-top:2px">加倉 +3 檔</div>
+          </div>
+          <div style="border:1px solid #e5e7eb;border-radius:8px;padding:8px">
+            <div style="font-size:10px;color:#6b7280">00981A</div>
+            <div style="font-size:12px;font-weight:600;color:#111827">中信ESG</div>
+            <div style="color:#dc2626;font-size:11px;margin-top:2px">減倉 -2 檔</div>
+          </div>
+        </div>
+        <div style="background:#f9fafb;border-radius:6px;padding:6px;font-size:10px;color:#6b7280;text-align:center">
+          點入查看完整成分股 →
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — 卡片資訊流</h3>
+      <p>每支 ETF 一張卡片，突出重點異動，視覺較現代。</p>
+    </div>
+  </div>
+
+</div>

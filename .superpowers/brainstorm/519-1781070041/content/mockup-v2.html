@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETF 異動追蹤 v2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0b0f1a; color: #e2e8f0; font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 13px; padding: 0; }
+
+  /* Nav */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #1e293b; background: #0b0f1a; position: sticky; top: 0; z-index: 10; }
+  .logo { font-size: 15px; font-weight: 700; color: #f8fafc; }
+  .logo span { color: #38bdf8; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .search { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 6px 12px; color: #94a3b8; font-size: 12px; width: 200px; outline: none; }
+
+  /* Update bar */
+  .update-bar { background: #111827; border-bottom: 1px solid #1e293b; padding: 8px 24px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #475569; }
+  .update-progress { display: flex; align-items: center; gap: 8px; }
+  .progress-track { background: #1e293b; border-radius: 99px; width: 100px; height: 4px; }
+  .progress-fill { background: #38bdf8; border-radius: 99px; height: 4px; width: 75%; }
+  .update-count { color: #38bdf8; font-weight: 600; }
+  .summary-text { color: #64748b; border-left: 1px solid #1e293b; padding-left: 12px; flex: 1; }
+  .summary-text em { color: #94a3b8; font-style: normal; }
+
+  /* Main content */
+  .main { padding: 20px 24px; max-width: 1280px; margin: 0 auto; }
+
+  /* Big stats */
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .stat-card { border-radius: 12px; padding: 16px 20px; }
+  .stat-card.buy { background: linear-gradient(135deg, #0f1e14 0%, #111c13 100%); border: 1px solid #14532d44; }
+  .stat-card.sell { background: linear-gradient(135deg, #1c0e0e 0%, #1a0f0f 100%); border: 1px solid #7f1d1d44; }
+  .stat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-card.buy .stat-label { color: #4ade80; }
+  .stat-card.sell .stat-label { color: #f87171; }
+  .stat-amount { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+  .stat-card.buy .stat-amount { color: #4ade80; }
+  .stat-card.sell .stat-amount { color: #f87171; }
+  .stat-sub { font-size: 11px; color: #475569; }
+
+  /* Section headers */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; margin-top: 24px; }
+  .section-title { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* Cross-ETF + Top ETF grid */
+  .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .rank-card { background: #111827; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; }
+  .rank-card-title { font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #1e293b; }
+  .rank-card-title.buy { color: #4ade80; }
+  .rank-card-title.sell { color: #f87171; }
+  .rank-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #0f172a; }
+  .rank-item:last-child { border-bottom: none; }
+  .rank-num { font-size: 10px; color: #334155; font-weight: 700; width: 14px; }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-ticker { font-size: 11px; font-weight: 600; }
+  .rank-ticker.buy { color: #4ade80; }
+  .rank-ticker.sell { color: #f87171; }
+  .rank-name { font-size: 10px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rank-amount { font-size: 12px; font-weight: 700; }
+  .rank-amount.buy { color: #4ade80; }
+  .rank-amount.sell { color: #f87171; }
+
+  /* Table */
+  .table-wrap { background: #111827; border: 1px solid #1e293b; border-radius: 10px; overflow: hidden; }
+  .table-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #1e293b; }
+  .table-title { font-size: 13px; font-weight: 600; color: #f1f5f9; }
+  .filters { display: flex; gap: 6px; }
+  .f-btn { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 4px 10px; color: #64748b; font-size: 11px; cursor: pointer; }
+  .f-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th { padding: 8px 16px; text-align: left; font-size: 11px; font-weight: 500; color: #334155; background: #0f172a; border-bottom: 1px solid #1e293b; }
+  tbody tr { border-bottom: 1px solid #0f172a; }
+  tbody tr:hover { background: #1e293b33; }
+  tbody td { padding: 10px 16px; vertical-align: middle; }
+  .etf-code { font-size: 11px; color: #38bdf8; font-weight: 600; }
+  .etf-name { font-size: 12px; color: #e2e8f0; }
+  .manager-link { color: #94a3b8; font-size: 12px; text-decoration: none; border-bottom: 1px dashed #334155; cursor: pointer; }
+  .manager-link:hover { color: #38bdf8; border-color: #38bdf8; }
+  .buy-val { color: #4ade80; font-weight: 600; }
+  .sell-val { color: #f87171; font-weight: 600; }
+  .neutral { color: #334155; }
+  .detail-btn { background: transparent; border: 1px solid #1e293b; border-radius: 4px; padding: 3px 10px; color: #475569; font-size: 10px; cursor: pointer; }
+  .detail-btn:hover { border-color: #38bdf8; color: #38bdf8; }
+
+  .table-footer { display: flex; gap: 16px; padding: 8px 16px; background: #0f172a; border-top: 1px solid #1e293b; font-size: 10px; color: #334155; }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <div class="logo">ETF<span>異動</span></div>
+  <div class="nav-right">
+    <input class="search" placeholder="🔍  搜尋 ETF、個股、經理人...">
+  </div>
+</div>
+
+<!-- Update status bar -->
+<div class="update-bar">
+  <div class="update-progress">
+    <span>資料更新</span>
+    <div class="progress-track"><div class="progress-fill"></div></div>
+    <span class="update-count">22 / 29 已更新</span>
+  </div>
+  <div class="summary-text">
+    今日主動圈 加碼 <em>+79.4 億</em>、減碼 <em>-35.9 億</em>，半導體業加碼最多（+36.2 億），<em>00981A</em> 主動統一台股增長領頭（+22.8 億）。
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Big Stats -->
+  <div class="stats-row">
+    <div class="stat-card buy">
+      <div class="stat-label">今日全市場加碼</div>
+      <div class="stat-amount">+79.4 億</div>
+      <div class="stat-sub">共 6 檔 ETF 有加碼</div>
+    </div>
+    <div class="stat-card sell">
+      <div class="stat-label">今日全市場減碼</div>
+      <div class="stat-amount">-35.9 億</div>
+      <div class="stat-sub">共 5 檔 ETF 有減碼</div>
+    </div>
+  </div>
+
+  <!-- 4-col ranking -->
+  <div class="four-col">
+    <!-- 同步加碼 Top 3 -->
+    <div class="rank-card">
+      <div class="rank-card-title buy">同步加碼 Top 3</div>
+      <div class="rank-item">
+        <div class="rank-num">1</div>
+        <div class="rank-info">
+          <div class="rank-ticker buy">2454</div>
+          <div class="rank-name">聯發科</div>
+        </div>
+        <div class="rank-amount buy">+13.0 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">2</div>
+        <div class="rank-info">
+          <div class="rank-ticker buy">3653</div>
+          <div class="rank-name">健策</div>
+        </div>
+        <div class="rank-amount buy">+7.0 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">3</div>
+        <div class="rank-info">
+          <div class="rank-ticker buy">6223</div>
+          <div class="rank-name">旺矽科技</div>
+        </div>
+        <div class="rank-amount buy">+6.1 億</div>
+      </div>
+    </div>
+
+    <!-- 同步減碼 Top 3 -->
+    <div class="rank-card">
+      <div class="rank-card-title sell">同步減碼 Top 3</div>
+      <div class="rank-item">
+        <div class="rank-num">1</div>
+        <div class="rank-info">
+          <div class="rank-ticker sell">2382</div>
+          <div class="rank-name">廣達</div>
+        </div>
+        <div class="rank-amount sell">-19.4 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">2</div>
+        <div class="rank-info">
+          <div class="rank-ticker sell">2330</div>
+          <div class="rank-name">台積電</div>
+        </div>
+        <div class="rank-amount sell">-8.2 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">3</div>
+        <div class="rank-info">
+          <div class="rank-ticker sell">2317</div>
+          <div class="rank-name">鴻海</div>
+        </div>
+        <div class="rank-amount sell">-4.7 億</div>
+      </div>
+    </div>
+
+    <!-- 加碼最多 ETF Top 3 -->
+    <div class="rank-card">
+      <div class="rank-card-title buy">加碼最多 ETF Top 3</div>
+      <div class="rank-item">
+        <div class="rank-num">1</div>
+        <div class="rank-info">
+          <div class="rank-ticker buy">00981A</div>
+          <div class="rank-name">主動統一台股...</div>
+        </div>
+        <div class="rank-amount buy">+22.8 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">2</div>
+        <div class="rank-info">
+          <div class="rank-ticker buy">00405A</div>
+          <div class="rank-name">主動富邦台...</div>
+        </div>
+        <div class="rank-amount buy">+21.6 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">3</div>
+        <div class="rank-info">
+          <div class="rank-ticker buy">00992A</div>
+          <div class="rank-name">主動群益科...</div>
+        </div>
+        <div class="rank-amount buy">+14.3 億</div>
+      </div>
+    </div>
+
+    <!-- 減碼最多 ETF Top 3 -->
+    <div class="rank-card">
+      <div class="rank-card-title sell">減碼最多 ETF Top 3</div>
+      <div class="rank-item">
+        <div class="rank-num">1</div>
+        <div class="rank-info">
+          <div class="rank-ticker sell">00981A</div>
+          <div class="rank-name">主動統一台股...</div>
+        </div>
+        <div class="rank-amount sell">-19.1 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">2</div>
+        <div class="rank-info">
+          <div class="rank-ticker sell">00991A</div>
+          <div class="rank-name">主動復華未...</div>
+        </div>
+        <div class="rank-amount sell">-9.9 億</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-num">3</div>
+        <div class="rank-info">
+          <div class="rank-ticker sell">00403A</div>
+          <div class="rank-name">主動統一升...</div>
+        </div>
+        <div class="rank-amount sell">-5.3 億</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Table -->
+  <div class="section-header">
+    <div class="section-title">所有 ETF 今日異動</div>
+  </div>
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <div class="table-title">全部 87 支 ETF</div>
+      <div class="filters">
+        <button class="f-btn active">全部</button>
+        <button class="f-btn">只看加碼</button>
+        <button class="f-btn">只看減碼</button>
+        <button class="f-btn">股票型</button>
+        <button class="f-btn">債券型</button>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ETF 代碼</th>
+          <th>名稱</th>
+          <th>基金經理人</th>
+          <th>新增檔數</th>
+          <th>刪除檔數</th>
+          <th>加碼金額</th>
+          <th>減碼金額</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="etf-code">00981A</div></td>
+          <td><div class="etf-name">主動統一台股增長</div></td>
+          <td><span class="manager-link">林彥名</span></td>
+          <td><span class="buy-val">+5 檔</span></td>
+          <td><span class="sell-val">-3 檔</span></td>
+          <td><span class="buy-val">+22.8 億</span></td>
+          <td><span class="sell-val">-19.1 億</span></td>
+          <td><button class="detail-btn">明細 →</button></td>
+        </tr>
+        <tr>
+          <td><div class="etf-code">00405A</div></td>
+          <td><div class="etf-name">主動富邦台灣</div></td>
+          <td><span class="manager-link">劉鴻杰</span></td>
+          <td><span class="buy-val">+3 檔</span></td>
+          <td><span class="neutral">—</span></td>
+          <td><span class="buy-val">+21.6 億</span></td>
+          <td><span class="neutral">—</span></td>
+          <td><button class="detail-btn">明細 →</button></td>
+        </tr>
+        <tr>
+          <td><div class="etf-code">00878</div></td>
+          <td><div class="etf-name">國泰永續高股息</div></td>
+          <td><span class="manager-link">蘇鈺媛</span></td>
+          <td><span class="buy-val">+2 檔</span></td>
+          <td><span class="sell-val">-1 檔</span></td>
+          <td><span class="buy-val">+8.4 億</span></td>
+          <td><span class="sell-val">-2.1 億</span></td>
+          <td><button class="detail-btn">明細 →</button></td>
+        </tr>
+        <tr>
+          <td><div class="etf-code">00991A</div></td>
+          <td><div class="etf-name">主動復華未來關鍵</div></td>
+          <td><span class="manager-link">陳重銓</span></td>
+          <td><span class="neutral">—</span></td>
+          <td><span class="sell-val">-4 檔</span></td>
+          <td><span class="neutral">—</span></td>
+          <td><span class="sell-val">-9.9 億</span></td>
+          <td><button class="detail-btn">明細 →</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-footer">
+      <span>共 87 支 ETF</span>
+      <span>今日有異動：23 支</span>
+      <span>資料來源：各投信公司官網</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

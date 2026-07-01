@@ -2,6 +2,7 @@ import asyncio
 import os
 import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.pool import NullPool
 
 from app.database import Base
 from app.models import ETF, FundManager, HoldingsSnapshot, HoldingsChange, Stock, AlertSubscription
@@ -19,7 +20,7 @@ def event_loop():
 
 @pytest.fixture(scope="session")
 async def test_engine():
-    engine = create_async_engine(TEST_DB_URL)
+    engine = create_async_engine(TEST_DB_URL, poolclass=NullPool)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
@@ -32,6 +33,5 @@ async def test_engine():
 async def db(test_engine) -> AsyncSession:
     factory = async_sessionmaker(test_engine, expire_on_commit=False)
     async with factory() as session:
-        async with session.begin():
-            yield session
-            await session.rollback()
+        yield session
+        await session.rollback()
