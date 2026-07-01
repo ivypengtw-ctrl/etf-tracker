@@ -8,7 +8,10 @@ from app.scheduler import start_scheduler
 
 @asynccontextmanager
 async def lifespan(app):
-    start_scheduler()
+    try:
+        start_scheduler()
+    except Exception as e:
+        print(f"Warning: Scheduler failed to start: {e}")
     yield
 
 
