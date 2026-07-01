@@ -3,10 +3,8 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install dependencies
-COPY pyproject.toml ./
-RUN pip install --no-cache-dir poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app
 COPY . .
